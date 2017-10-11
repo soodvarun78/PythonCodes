@@ -1,0 +1,40 @@
+import json
+from bokeh.plotting import figure, show, output_file
+
+month_array = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+#list of months in json file
+monthlist = []
+#Dict of months:number in json file
+#Example {May:3,July:1}
+monthDict = {}
+
+#open json
+fp = open("birthday.json","r")
+a = json.load(fp)
+
+for i in a.keys():
+    splitted_str=a[i].split('/')
+    month=splitted_str[1]
+#Add to monthlist
+    monthlist.append(month_array[int(month)-1])
+
+#Initialize Dict like this {Jan:0,Feb:0,......}
+for i in monthlist:
+    monthDict[i]=0
+
+for i in monthlist:
+    monthDict[i]=int(monthDict[i]) + 1
+
+print monthDict
+
+#bokeh plot 
+output_file("plot.html")
+
+# create a figure
+p = figure(x_range=month_array)
+
+# create a histogram
+p.vbar(x=monthDict.keys(),top=monthDict.values(),width=0.5)
+
+# render (show) the plot
+show(p)
