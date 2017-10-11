@@ -1,0 +1,33 @@
+import csv
+# Import smtplib for the actual sending function
+import smtplib
+
+# Import the email modules we'll need
+from email.mime.text import MIMEText
+#SMTP related definition
+msg = MIMEText('This is sample Email')
+
+#To be modifed by test code user
+me='xxxxx.com' #enter valid email id
+msg['Subject'] = 'test'
+msg['From'] = me
+s = smtplib.SMTP('smtp.gmail.com', 587)
+s.ehlo()
+s.starttls()
+
+#To be modifed by test code user
+s.login("username", "password") #enter valid username and password 
+
+#send email
+def send_mail(email_address):
+    msg['To'] = email_address
+    s.sendmail(me, email_address, msg.as_string())
+
+#open the csv
+with open('email.csv') as f:
+    parser=csv.reader(f,delimiter=',')
+    for x in parser:
+        for y in  x:
+            if '@' in y:
+                send_mail(y)
+s.quit()
